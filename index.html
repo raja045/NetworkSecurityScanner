@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetSecScan Pro - Network Security Scanner</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-color-scheme="dark">
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header__content">
+                <div class="header__brand">
+                    <div class="header__logo">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <circle cx="16" cy="16" r="8" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            <circle cx="16" cy="16" r="3" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <div class="header__title">
+                        <h1>NetSecScan Pro</h1>
+                        <span class="header__subtitle">Network Security Scanner</span>
+                    </div>
+                </div>
+                <div class="header__status">
+                    <div class="status-indicator">
+                        <div class="status-indicator__dot status-indicator__dot--active"></div>
+                        <span>System Active</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="nav-tab nav-tab--active" data-tab="scanner">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Scanner
+            </button>
+            <button class="nav-tab" data-tab="results">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2v1a1 1 0 001 1h6a1 1 0 001-1V3a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                </svg>
+                Results
+            </button>
+            <button class="nav-tab" data-tab="reports">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd"/>
+                </svg>
+                Reports
+            </button>
+            <button class="nav-tab" data-tab="settings">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+                </svg>
+                Settings
+            </button>
+        </nav>
+
+        <main class="main">
+            <!-- Scanner Tab -->
+            <div id="scanner-tab" class="tab-content tab-content--active">
+                <div class="scanner-layout">
+                    <!-- Configuration Panel -->
+                    <div class="config-panel">
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>Scan Configuration</h3>
+                            </div>
+                            <div class="card__body">
+                                <div class="form-group">
+                                    <label class="form-label">Target Specification</label>
+                                    <input type="text" class="form-control" id="target-input" placeholder="192.168.1.1 or 192.168.1.0/24" value="192.168.1.0/24">
+                                    <small class="form-text">Single IP, IP range, CIDR notation, or hostname</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Port Range</label>
+                                    <select class="form-control" id="port-range">
+                                        <option value="common">Common Ports (1-1024)</option>
+                                        <option value="all">All Ports (1-65535)</option>
+                                        <option value="custom">Custom Range</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group" id="custom-ports" style="display: none;">
+                                    <label class="form-label">Custom Port Range</label>
+                                    <input type="text" class="form-control" id="custom-port-input" placeholder="80,443,8080-8090">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Scan Type</label>
+                                    <select class="form-control" id="scan-type">
+                                        <option value="tcp-syn">TCP SYN Scan (Stealth)</option>
+                                        <option value="tcp-connect">TCP Connect Scan</option>
+                                        <option value="udp">UDP Scan</option>
+                                        <option value="comprehensive">Comprehensive Scan</option>
+                                        <option value="vulnerability">Vulnerability Scan</option>
+                                    </select>
+                                </div>
+
+                                <div class="advanced-options">
+                                    <h4>Advanced Options</h4>
+                                    <div class="option-row">
+                                        <label class="form-label">Scan Speed</label>
+                                        <select class="form-control" id="scan-speed">
+                                            <option value="paranoid">Paranoid (Very Slow)</option>
+                                            <option value="sneaky">Sneaky (Slow)</option>
+                                            <option value="polite">Polite (Normal)</option>
+                                            <option value="normal" selected>Normal</option>
+                                            <option value="aggressive">Aggressive</option>
+                                            <option value="insane">Insane (Very Fast)</option>
+                                        </select>
+                                    </div>
+                                    <div class="option-row">
+                                        <label class="form-label">Thread Count</label>
+                                        <input type="range" class="range-input" id="thread-count" min="1" max="100" value="50">
+                                        <span id="thread-count-value">50</span>
+                                    </div>
+                                    <div class="option-row">
+                                        <label class="form-label">Timeout (seconds)</label>
+                                        <input type="number" class="form-control" id="timeout" value="5" min="1" max="60">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card__footer">
+                                <button class="btn btn--primary btn--full-width" id="start-scan">
+                                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Start Scan
+                                </button>
+                                <button class="btn btn--outline btn--full-width" id="stop-scan" style="display: none;">
+                                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Stop Scan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Panel -->
+                    <div class="progress-panel">
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>Scan Progress</h3>
+                                <div class="scan-status" id="scan-status">Ready</div>
+                            </div>
+                            <div class="card__body">
+                                <div class="progress-container">
+                                    <div class="progress-bar">
+                                        <div class="progress-bar__fill" id="progress-fill"></div>
+                                    </div>
+                                    <div class="progress-text">
+                                        <span id="progress-percent">0%</span>
+                                        <span id="progress-eta">ETA: --:--</span>
+                                    </div>
+                                </div>
+
+                                <div class="scan-stats">
+                                    <div class="stat">
+                                        <div class="stat__value" id="hosts-scanned">0</div>
+                                        <div class="stat__label">Hosts Scanned</div>
+                                    </div>
+                                    <div class="stat">
+                                        <div class="stat__value" id="ports-found">0</div>
+                                        <div class="stat__label">Open Ports</div>
+                                    </div>
+                                    <div class="stat">
+                                        <div class="stat__value" id="vulnerabilities-found">0</div>
+                                        <div class="stat__label">Vulnerabilities</div>
+                                    </div>
+                                </div>
+
+                                <div class="current-target">
+                                    <span class="current-target__label">Current Target:</span>
+                                    <span class="current-target__value" id="current-target">--</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scan Log -->
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>Scan Log</h3>
+                                <button class="btn btn--sm btn--outline" id="clear-log">Clear</button>
+                            </div>
+                            <div class="card__body">
+                                <div class="scan-log" id="scan-log">
+                                    <div class="log-entry">
+                                        <span class="log-time">[Ready]</span>
+                                        <span class="log-message">NetSecScan Pro initialized and ready for scanning.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Tab -->
+            <div id="results-tab" class="tab-content">
+                <div class="results-layout">
+                    <div class="results-header">
+                        <h2>Scan Results</h2>
+                        <div class="results-controls">
+                            <input type="text" class="form-control search-input" id="results-search" placeholder="Search results...">
+                            <button class="btn btn--outline" id="export-results">
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                                </svg>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="results-content">
+                        <div class="results-summary" id="results-summary" style="display: none;">
+                            <div class="summary-card">
+                                <div class="summary-stat">
+                                    <div class="summary-stat__value" id="summary-hosts">0</div>
+                                    <div class="summary-stat__label">Hosts Discovered</div>
+                                </div>
+                                <div class="summary-stat">
+                                    <div class="summary-stat__value" id="summary-ports">0</div>
+                                    <div class="summary-stat__label">Open Ports</div>
+                                </div>
+                                <div class="summary-stat">
+                                    <div class="summary-stat__value" id="summary-critical">0</div>
+                                    <div class="summary-stat__label">Critical Issues</div>
+                                </div>
+                                <div class="summary-stat">
+                                    <div class="summary-stat__value" id="summary-high">0</div>
+                                    <div class="summary-stat__label">High Risk</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="results-table-container">
+                            <table class="results-table" id="results-table">
+                                <thead>
+                                    <tr>
+                                        <th>IP Address</th>
+                                        <th>Hostname</th>
+                                        <th>Status</th>
+                                        <th>Open Ports</th>
+                                        <th>OS</th>
+                                        <th>Risk Level</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="results-tbody">
+                                    <tr class="empty-state">
+                                        <td colspan="7">
+                                            <div class="empty-state__content">
+                                                <svg width="48" height="48" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2.22l.123.489.804.804A1 1 0 0113 18H7a1 1 0 01-.707-1.707l.804-.804L7.22 15H5a2 2 0 01-2-2V5zm5.771 7H5V5h10v7H8.771z" clip-rule="evenodd"/>
+                                                </svg>
+                                                <h3>No scan results available</h3>
+                                                <p>Start a scan to see network security results here.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reports-tab" class="tab-content">
+                <div class="reports-layout">
+                    <h2>Security Reports</h2>
+                    <div class="reports-grid">
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>Executive Summary</h3>
+                            </div>
+                            <div class="card__body">
+                                <p>Generate high-level security assessment report for management.</p>
+                                <button class="btn btn--primary">Generate Report</button>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>Technical Details</h3>
+                            </div>
+                            <div class="card__body">
+                                <p>Detailed technical findings with remediation steps.</p>
+                                <button class="btn btn--primary">Generate Report</button>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>Compliance Report</h3>
+                            </div>
+                            <div class="card__body">
+                                <p>Compliance status against security frameworks.</p>
+                                <button class="btn btn--primary">Generate Report</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings-tab" class="tab-content">
+                <div class="settings-layout">
+                    <h2>Settings</h2>
+                    <div class="settings-grid">
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>Scan Preferences</h3>
+                            </div>
+                            <div class="card__body">
+                                <div class="form-group">
+                                    <label class="form-label">Default Scan Speed</label>
+                                    <select class="form-control">
+                                        <option>Normal</option>
+                                        <option>Aggressive</option>
+                                        <option>Polite</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Max Concurrent Threads</label>
+                                    <input type="number" class="form-control" value="50">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card__header">
+                                <h3>Report Settings</h3>
+                            </div>
+                            <div class="card__body">
+                                <div class="form-group">
+                                    <label class="form-label">Default Export Format</label>
+                                    <select class="form-control">
+                                        <option>CSV</option>
+                                        <option>JSON</option>
+                                        <option>XML</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Include Screenshots</label>
+                                    <input type="checkbox" checked>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
